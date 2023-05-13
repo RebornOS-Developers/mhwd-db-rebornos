@@ -1,0 +1,47 @@
+# Maintainer: shivanandvp <shivanandvp@rebornos.org>
+
+pkgname=mhwd-db-rebornos-git
+pkgver=0.8.0
+pkgrel=1
+
+arch=('x86_64' 'aarch64')
+pkgdesc='Database for mhwd-rebornos.'
+url='https://github.com/RebornOS-Developers/mhwd-db-rebornos'
+license=('GPL3')
+depends=('mhwd-nvidia>=525' 'mhwd-nvidia-470xx' 'mhwd-nvidia-390xx' 'mhwd-ati' 'mhwd-amdgpu')
+provides=('mhwd-db')
+conflicts=('mhwd-db-rebornos-local' 'mhwd-db-rebornos-git' 'mhwd-db' 'mhwd-db-cachyos' 'mhwd-db-garuda')
+makedepends=('git')
+
+sha256sums=('SKIP')
+source=("git+https://github.com/RebornOS-Developers/mhwd-db-rebornos")             
+
+pkgver() {
+    (   cd "${srcdir}/mhwd-db-rebornos"
+        set -o pipefail
+        git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    )
+}
+
+prepare() {
+    :
+}
+
+build() {     
+    :
+}
+
+package() {
+    PROJECT_DIRECTORY="${srcdir}/mhwd-db-rebornos"
+    # RESOURCE_DIRECTORY="$PROJECT_DIRECTORY/packaging/resources"
+    # BUILD_DIRECTORY="$PROJECT_DIRECTORY/target"
+    # NUMBER_OF_PROCESSORS="$(nproc)"
+    # NUMBER_OF_PROCESSORS="$(($NUMBER_OF_PROCESSORS-1))"
+    # TARGET_DIRECTORY_STUB="var/lib/mhwd"
+    # DIST_DIRECTORY="$PROJECT_DIRECTORY/$TARGET_DIRECTORY_STUB" 
+
+    cd "$PROJECT_DIRECTORY"
+    mkdir -p "$pkgdir"/var/lib/mhwd/db
+    cp -r pci "$pkgdir"/var/lib/mhwd/db/
+}
